@@ -1,5 +1,6 @@
 import React from "react";
-import { server } from "../../lib/api/server";
+import { useMutation } from "../../lib/hooks/useMutation";
+import { useQuery } from "../../lib/hooks/useQuery";
 import {
   DeleteListingData,
   DeleteListingVariables,
@@ -33,23 +34,60 @@ interface IProps {
   title: string;
 }
 
-export const Listings: React.FC<IProps> = ({ title }) => {
-  const fetchListings = async () => {
-    const { data } = await server.fetch<ListingsData>({ query: LISTINGS });
-    console.log(data);
+export const Listings = ({ title }: IProps) => {
+  const { data, loading, error, refetch } = useQuery<ListingsData>(LISTINGS);
+
+  const [
+    deleteListing,
+    { loading: deleteListingLoading, error: deleteListingError },
+  ] = useMutation<DeleteListingData, DeleteListingVariables>(DELETE_LISTING);
+
+  const handleDeleteListing = async (id: string) => {
+    await deleteListing({ id });
+    refetch();
   };
-  const deleteListing = async () => {
-    const { data } = await server.fetch<
-      DeleteListingData,
-      DeleteListingVariables
-    >({ query: DELETE_LISTING, variables: { id: "5f77c231f3660b0f376569eb" } });
-    console.log(data);
-  };
+
+  const listings = data ? data.listings : null;
+
+  const listingsList = listings ? (
+    <ul>
+      {listings.map((listing) => {
+        return (
+          <li key={listing.id}>
+            {listing.title}{" "}
+            <button onClick={() => handleDeleteListing(listing.id)}>
+              Delete
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  ) : null;
+
+  if (loading) {
+    return <h2>Loading...</h2>;
+  }
+
+  if (error) {
+    return <h2>Uh oh! Something went wrong - please try again later :(</h2>;
+  }
+
+  const deleteListingLoadingMessage = deleteListingLoading ? (
+    <h4>Deletion in progress...</h4>
+  ) : null;
+
+  const deleteListingErrorMessage = deleteListingError ? (
+    <h4>
+      Uh oh! Something went wrong with deleting :(. Please try again soon.
+    </h4>
+  ) : null;
+
   return (
     <div>
       <h2>{title}</h2>
-      <button onClick={fetchListings}>Query Listings</button>
-      <button onClick={deleteListing}>Delete Listing</button>
+      {listingsList}
+      {deleteListingLoadingMessage}
+      {deleteListingErrorMessage}
     </div>
   );
 };
