@@ -3,7 +3,7 @@ import { Google } from "../../../lib/api/Google";
 import { Viewer } from "../../../lib/types";
 import crypto from "crypto";
 import { LogInArgs } from "./types";
-import { Database, User } from "../../../@types";
+import { Database, User } from "../../../lib/types";
 import { Request, Response } from "express";
 
 const cookieOptions = {
