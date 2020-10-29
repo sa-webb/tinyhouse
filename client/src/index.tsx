@@ -3,16 +3,35 @@ import ReactDOM from "react-dom";
 
 import "./styles/index.css";
 
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+import {
+  ApolloProvider,
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+} from "@apollo/client";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import { Login } from "./sections/Login";
 import { Viewer } from "./lib/types";
 import { User } from "./sections/User";
 import { Affix } from "antd";
 import { AppHeader } from "./sections/AppHeader";
+import { setContext } from "@apollo/client/link/context";
+
+const httpLink = createHttpLink({
+  uri: "/api",
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = sessionStorage.getItem("token");
+  return {
+    headers: {
+      "X-CSRF-TOKEN": token || "",
+    },
+  };
+});
 
 const client = new ApolloClient({
-  uri: "/api",
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 
@@ -29,7 +48,7 @@ const App = () => {
   return (
     <Router>
       <Affix offsetTop={0} className="app__affix-header">
-        <AppHeader viewer={viewer} setViewer={setViewer}/>
+        <AppHeader viewer={viewer} setViewer={setViewer} />
       </Affix>
       <Switch>
         {/* ... */}
