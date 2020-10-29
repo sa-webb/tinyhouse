@@ -1,38 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-
 import "./styles/index.css";
-
 import {
-  ApolloProvider,
   ApolloClient,
+  ApolloProvider,
   InMemoryCache,
-  createHttpLink,
+  useMutation,
 } from "@apollo/client";
-import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
-import { Login } from "./sections/Login";
+import { Affix, Layout, Spin } from "antd";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { AppHeaderSkeleton } from "./lib/components/AppHeaderSkeleton";
+import { LOG_IN } from "./lib/graphql/mutations/Login";
+import {
+  LogIn as LogInData,
+  LogInVariables,
+} from "./lib/graphql/mutations/Login/__generated__/LogIn";
 import { Viewer } from "./lib/types";
-import { User } from "./sections/User";
-import { Affix } from "antd";
 import { AppHeader } from "./sections/AppHeader";
-import { setContext } from "@apollo/client/link/context";
+import { Login } from "./sections/Login";
+import { User } from "./sections/User";
 
-const httpLink = createHttpLink({
-  uri: "/api",
-});
-
-const authLink = setContext((_, { headers }) => {
-  const token = sessionStorage.getItem("token");
-  return {
-    headers: {
-      "X-CSRF-TOKEN": token || "",
-    },
-  };
-});
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  uri: "/api",
   cache: new InMemoryCache(),
+  headers: {
+    "X-CSRF-TOKEN": sessionStorage.getItem("token") || "",
+  },
 });
 
 const initialViewer: Viewer = {
@@ -45,6 +39,35 @@ const initialViewer: Viewer = {
 
 const App = () => {
   const [viewer, setViewer] = useState<Viewer>(initialViewer);
+  const [logIn, { error }] = useMutation<LogInData, LogInVariables>(LOG_IN, {
+    onCompleted: (data) => {
+      if (data && data.logIn) {
+        setViewer(data.logIn);
+        if (data.logIn.token) {
+          sessionStorage.setItem("token", data.logIn.token);
+        } else {
+          sessionStorage.removeItem("token");
+        }
+      }
+    },
+  });
+
+  const logInRef = useRef(logIn);
+  useEffect(() => {
+    logInRef.current();
+  }, []);
+
+  if (!viewer.didRequest && !error) {
+    return (
+      <Layout className="app-skeleton">
+        <AppHeaderSkeleton />
+        <div className="app-skeleton__spin-section">
+          <Spin size="large" tip="Launching Tinyhouse" />
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Router>
       <Affix offsetTop={0} className="app__affix-header">
