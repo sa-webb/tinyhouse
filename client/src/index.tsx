@@ -19,6 +19,7 @@ import { Viewer } from "./lib/types";
 import { AppHeader } from "./sections/AppHeader";
 import { Login } from "./sections/Login";
 import { User } from "./sections/User";
+import { Listing } from "./sections/Listing";
 
 const client = new ApolloClient({
   uri: "/api",
@@ -74,6 +75,7 @@ const App = () => {
       </Affix>
       <Switch>
         {/* ... */}
+        <Route exact path="/listing/:id" component={Listing} />
         <Route
           exact
           path="/login"
