@@ -7,6 +7,7 @@ import { viewerResolvers } from "./Viewer";
 export const resolvers = merge(
   bookingResolvers,
   listingResolvers,
+  listingResolvers,
   userResolvers,
   viewerResolvers
 );
