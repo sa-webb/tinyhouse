@@ -2,15 +2,15 @@ import { IResolvers } from "apollo-server-express";
 import { ObjectId } from "mongodb";
 import { Database, Listing, User } from "../../../lib/types";
 import { authorize } from "../../../lib/utils";
+import { Request } from "express";
 import {
+  ListingArgs,
   ListingBookingsArgs,
   ListingBookingsData,
-  ListingArgs,
   ListingsArgs,
   ListingsData,
   ListingsFilter,
 } from "./types";
-import { Request } from "express";
 
 export const listingResolvers: IResolvers = {
   Query: {
