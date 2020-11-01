@@ -23,11 +23,13 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
     <Link to={`/listing/${id}`}>
       <Card
         hoverable
+        style={{width: 292}}
         cover={
-          <div
-            style={{ backgroundImage: `url(${image})` }}
-            className="listing-card__cover-img"
-          />
+          <img alt="" src={image} height="194.66"/>
+          // <div
+          //   style={{ backgroundImage: `url(${image})` }}
+          //   className="listing-card__cover-img"
+          // />
         }
       >
         <div className="listing-card__details">
