@@ -10,7 +10,11 @@ import londonImage from "../../assets/london.jpg";
 const { Title } = Typography;
 const { Search } = Input;
 
-export const HomeHero = () => {
+interface Props {
+  onSearch: (value: string) => void;
+}
+
+export const HomeHero = ({onSearch}: Props) => {
   return (
     <div className="home-hero">
       <div className="home-hero__search">
@@ -22,31 +26,32 @@ export const HomeHero = () => {
           size="large"
           enterButton
           className="home-hero__search-input"
+          onSearch={onSearch}
         />
       </div>
       <Row gutter={12} className="home-hero__cards">
         <Col xs={12} md={6}>
           <Link to="/listings/toronto">
-            <Card cover={<img alt="toronto" src={torontoImage} />}>
+            <Card cover={<img alt="Toronto" src={torontoImage} />}>
               Toronto
             </Card>
           </Link>
         </Col>
         <Col xs={12} md={6}>
           <Link to="/listings/dubai">
-            <Card cover={<img alt="dubai" src={dubaiImage} />}>Dubai</Card>
+            <Card cover={<img alt="Dubai" src={dubaiImage} />}>Dubai</Card>
           </Link>
         </Col>
         <Col xs={0} md={6}>
           <Link to="/listings/los%20angeles">
-            <Card cover={<img alt="los-angeles" src={losAngelesImage} />}>
+            <Card cover={<img alt="Los-Angeles" src={losAngelesImage} />}>
               Los Angeles
             </Card>
           </Link>
         </Col>
         <Col xs={0} md={6}>
           <Link to="/listings/london">
-            <Card cover={<img alt="los-angeles" src={londonImage} />}>
+            <Card cover={<img alt="London" src={londonImage} />}>
               London
             </Card>
           </Link>
