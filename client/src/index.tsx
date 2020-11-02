@@ -20,6 +20,7 @@ import { AppHeader } from "./sections/AppHeader";
 import { Login } from "./sections/Login";
 import { User } from "./sections/User";
 import { Listing } from "./sections/Listing";
+import { Listings } from "./sections/Listings";
 import { Home } from "./sections/Home";
 
 const client = new ApolloClient({
@@ -77,6 +78,7 @@ const App = () => {
       <Switch>
         {/* ... */}
         <Route exact path="/" component={Home} />
+        <Route exact path="/listings/:location" component={Listings} />
         <Route exact path="/listing/:id" component={Listing} />
         <Route
           exact
