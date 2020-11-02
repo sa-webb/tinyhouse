@@ -1,11 +1,16 @@
 import { gql } from "apollo-server-express";
 
 export const typeDefs = gql`
-type Query {
+  type Query {
     authUrl: String!
     user(id: ID!): User!
     listing(id: ID!): Listing!
-    listings(filter: ListingsFilter!, limit: Int!, page: Int!): Listings!
+    listings(
+      location: String
+      filter: ListingsFilter!
+      limit: Int!
+      page: Int!
+    ): Listings!
   }
   type Mutation {
     logIn(input: LogInInput): Viewer!
@@ -30,6 +35,8 @@ type Query {
     host: User!
     type: ListingType!
     address: String!
+    country: String!
+    admin: String!
     city: String!
     bookings(limit: Int!, page: Int!): Bookings
     bookingsIndex: String!
@@ -39,6 +46,7 @@ type Query {
   type Listings {
     total: Int!
     result: [Listing!]!
+    region: String
   }
   enum ListingType {
     APARTMENT
