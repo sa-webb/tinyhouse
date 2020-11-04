@@ -22,12 +22,16 @@ import { User } from "./sections/User";
 import { Listing } from "./sections/Listing";
 import { Listings } from "./sections/Listings";
 import { Home } from "./sections/Home";
+import { Stripe } from "./sections/Stripe";
+
+const token = sessionStorage.getItem("token");
 
 const client = new ApolloClient({
   uri: "/api",
   cache: new InMemoryCache(),
+
   headers: {
-    "X-CSRF-TOKEN": sessionStorage.getItem("token") || "",
+    "X-CSRF-TOKEN": token || "",
   },
 });
 
@@ -76,7 +80,6 @@ const App = () => {
         <AppHeader viewer={viewer} setViewer={setViewer} />
       </Affix>
       <Switch>
-        {/* ... */}
         <Route exact path="/" component={Home} />
         <Route exact path="/listings/:location" component={Listings} />
         <Route exact path="/listing/:id" component={Listing} />
@@ -87,20 +90,24 @@ const App = () => {
         />
         <Route
           exact
-          path="/user/:id"
-          render={(props) => <User {...props} viewer={viewer} />}
+          path="/stripe"
+          render={(props) => (
+            <Stripe {...props} viewer={viewer} setViewer={setViewer} />
+          )}
         />
-        {/* ... */}
+        <Route
+          exact
+          path="/user/:id"
+          render={(props) => <User {...props} viewer={viewer} setViewer={setViewer} />}
+        />
       </Switch>
     </Router>
   );
 };
 
 ReactDOM.render(
-  <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
-  </React.StrictMode>,
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>,
   document.getElementById("root")
 );
