@@ -15,6 +15,8 @@ export const typeDefs = gql`
   type Mutation {
     logIn(input: LogInInput): Viewer!
     logOut: Viewer!
+    connectStripe(input: ConnectStripeInput!): Viewer!
+    disconnectStripe: Viewer!
   }
   type Booking {
     id: ID!
@@ -26,6 +28,9 @@ export const typeDefs = gql`
   type Bookings {
     total: Int!
     result: [Booking!]!
+  }
+  input ConnectStripeInput {
+    code: String!
   }
   type Listing {
     id: ID!
