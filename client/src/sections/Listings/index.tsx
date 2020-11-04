@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Affix, Layout, List, Typography } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { ErrorBanner } from "../../lib/components/ErrorBanner";
 import { ListingCard } from "../../lib/components/ListingCard";
@@ -24,19 +24,26 @@ interface MatchParams {
 }
 
 export const Listings = ({ match }: RouteComponentProps<MatchParams>) => {
+  const locationRef = useRef(match.params.location);
   const [filter, setFilter] = useState(ListingsFilter.PRICE_LOW_TO_HIGH);
   const [page, setPage] = useState(1);
   const { data, loading, error } = useQuery<ListingsData, ListingsVariables>(
     LISTINGS,
     {
+      skip: locationRef.current !== match.params.location && page !== 1,
       variables: {
         location: match.params.location,
         filter,
         limit: PAGE_LIMIT,
-        page: 1,
+        page,
       },
     }
   );
+
+  useEffect(() => {
+    setPage(1);
+    locationRef.current = match.params.location;
+  }, [match.params.location]);
 
   if (loading) {
     return (
