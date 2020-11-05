@@ -9,6 +9,6 @@ export const authorize = async (
   const viewer = await db.users.findOne({
     _id: req.signedCookies.viewer,
   });
-  console.log(viewer)
+
   return viewer;
 };
