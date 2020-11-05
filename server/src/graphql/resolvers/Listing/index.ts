@@ -1,6 +1,7 @@
 import { IResolvers } from "apollo-server-express";
 import { Request } from "express";
 import { ObjectId } from "mongodb";
+import { Cloudinary } from "../../../lib/api/Cloudinary";
 import { Google } from "../../../lib/api/Google";
 import { Database, Listing, ListingType, User } from "../../../lib/types";
 import { authorize } from "../../../lib/utils";
@@ -91,12 +92,10 @@ export const listingResolvers: IResolvers = {
         let cursor = await db.listings.find(query);
 
         if (filter && filter === ListingsFilter.PRICE_LOW_TO_HIGH) {
-          console.log("TRIGGERED LOW TO HIGH");
           cursor = cursor.sort({ price: 1 });
         }
 
         if (filter && filter === ListingsFilter.PRICE_HIGH_TO_LOW) {
-          console.log("TRIGGERED HIGH TO LOW");
           cursor = cursor.sort({ price: -1 });
         }
 
@@ -121,7 +120,7 @@ export const listingResolvers: IResolvers = {
       verifyHostListingInput(input);
 
       const viewer = await authorize(db, req);
-      console.log(viewer);
+
       if (!viewer) {
         throw new Error("viewer cannot be found");
       }
@@ -130,9 +129,12 @@ export const listingResolvers: IResolvers = {
         throw new Error("invalid address input");
       }
 
+      const imageUrl = await Cloudinary.upload(input.image);
+
       const insertResult = await db.listings.insertOne({
         _id: new ObjectId(),
         ...input,
+        image: imageUrl,
         bookings: [],
         bookingsIndex: {},
         country,
@@ -140,6 +142,7 @@ export const listingResolvers: IResolvers = {
         city,
         host: viewer._id,
       });
+
       const insertedListing: Listing = insertResult.ops[0];
 
       await db.users.updateOne(
