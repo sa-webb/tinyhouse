@@ -23,6 +23,7 @@ import { Listing } from "./sections/Listing";
 import { Listings } from "./sections/Listings";
 import { Home } from "./sections/Home";
 import { Stripe } from "./sections/Stripe";
+import { Host } from "./sections/Host";
 
 const token = sessionStorage.getItem("token");
 
@@ -85,6 +86,11 @@ const App = () => {
         <Route exact path="/listing/:id" component={Listing} />
         <Route
           exact
+          path="/host"
+          render={(props) => <Host {...props} viewer={viewer} />}
+        />
+        <Route
+          exact
           path="/login"
           render={(props) => <Login {...props} setViewer={setViewer} />}
         />
@@ -98,7 +104,9 @@ const App = () => {
         <Route
           exact
           path="/user/:id"
-          render={(props) => <User {...props} viewer={viewer} setViewer={setViewer} />}
+          render={(props) => (
+            <User {...props} viewer={viewer} setViewer={setViewer} />
+          )}
         />
       </Switch>
     </Router>
