@@ -18,6 +18,7 @@ export const typeDefs = gql`
     connectStripe(input: ConnectStripeInput!): Viewer!
     disconnectStripe: Viewer!
     hostListing(input: HostListingInput!): Listing!
+    createBooking(input: CreateBookingInput!): Booking!
   }
   type Booking {
     id: ID!
@@ -32,6 +33,12 @@ export const typeDefs = gql`
   }
   input ConnectStripeInput {
     code: String!
+  }
+  input CreateBookingInput {
+    id: ID!
+    source: String!
+    checkIn: String!
+    checkOut: String!
   }
   input HostListingInput {
     title: String!
