@@ -25,6 +25,9 @@ import { Home } from "./sections/Home";
 import { Stripe } from "./sections/Stripe";
 import { Host } from "./sections/Host";
 
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
 const token = sessionStorage.getItem("token");
 
 const client = new ApolloClient({
@@ -43,6 +46,8 @@ const initialViewer: Viewer = {
   hasWallet: null,
   didRequest: false,
 };
+
+const stripePromise = loadStripe(process.env.REACT_APP_S_PUBLISHABLE_KEY!);
 
 const App = () => {
   const [viewer, setViewer] = useState<Viewer>(initialViewer);
@@ -86,7 +91,11 @@ const App = () => {
         <Route
           exact
           path="/listing/:id"
-          render={(props) => <Listing {...props} viewer={viewer} />}
+          render={(props) => (
+            <Elements stripe={stripePromise}>
+              <Listing {...props} viewer={viewer} />
+            </Elements>
+          )}
         />
         <Route
           exact
