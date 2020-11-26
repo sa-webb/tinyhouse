@@ -1,23 +1,28 @@
-import express from "express";
-import { listings } from "./listings";
+require("dotenv").config();
+import { ApolloServer } from "apollo-server-express";
+import express, { Application } from "express";
+import { connectDatabase } from "./database";
+import { resolvers, typeDefs } from "./graphql";
+import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 
-const port = 9000;
-const app = express();
-app.use(bodyParser.json());
+const mount = async (app: Application) => {
+  const db = await connectDatabase();
 
-app.get("/listings", (_req, res) => res.send(listings));
+  app.use(bodyParser.json({ limit: "2mb" }));
+  app.use(cookieParser(process.env.SECRET));
 
-app.post("/delete-listing", (req, res) => {
-  const id: string = req.body.id;
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req, res }) => ({ db, req, res }),
+  });
 
-  for (let i = 0; i < listings.length; i++) {
-    if (listings[i].id === id) {
-      return res.send(listings.splice(i, 1)[0]);
-    }
-  }
+  server.applyMiddleware({ app, path: "/api" });
 
-  return res.send("failed to deleted listing");
-});
+  app.listen(process.env.PORT);
 
-app.listen(port);
+  console.log(`[app] : http://localhost:${process.env.PORT}`);
+};
+
+mount(express());
