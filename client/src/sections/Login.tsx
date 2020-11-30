@@ -16,6 +16,7 @@ import { LOG_IN } from "../lib/graphql/mutations/Login";
 import { displayErrorMessage, displaySuccessNotification } from "../lib/utils";
 import { ErrorBanner } from "../lib/components/ErrorBanner";
 import { Redirect } from "react-router-dom";
+import { useScrollToTop } from "../lib/hooks/useScrollToTop";
 
 const { Content } = Layout;
 const { Text, Title } = Typography;
@@ -38,6 +39,8 @@ export const Login = ({ setViewer }: Props) => {
       }
     },
   });
+
+  useScrollToTop();
 
   // logInRef.current property will reference the original function regardless of how many renders happen again
   // this function reference is going to remain the same regardless of rerenders

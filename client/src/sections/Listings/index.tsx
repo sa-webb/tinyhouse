@@ -10,6 +10,7 @@ import {
   Listings as ListingsData,
   ListingsVariables,
 } from "../../lib/graphql/queries/Listings/__generated__/Listings";
+import { useScrollToTop } from "../../lib/hooks/useScrollToTop";
 import { ListingsFilters } from "./ListingsFilters";
 import { ListingsPagination } from "./ListingsPagination";
 import { ListingsSkeleton } from "./ListingsSkeleton";
@@ -39,6 +40,8 @@ export const Listings = ({ match }: RouteComponentProps<MatchParams>) => {
       },
     }
   );
+
+  useScrollToTop();
 
   useEffect(() => {
     setPage(1);

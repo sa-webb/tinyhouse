@@ -16,6 +16,7 @@ import { ListingCreateBooking } from "./ListingCreateBooking";
 import { Moment } from "moment";
 import { Viewer } from "../../lib/types";
 import { ListingCreateBookingModal } from "./ListingCreateBookingModal";
+import { useScrollToTop } from "../../lib/hooks/useScrollToTop";
 
 interface MatchParams {
   id: string;
@@ -36,6 +37,8 @@ export const Listing = ({
   const [checkInDate, setCheckInDate] = useState<Moment | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Moment | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+
+  useScrollToTop();
 
   const clearBookingData = () => {
     setModalVisible(false);

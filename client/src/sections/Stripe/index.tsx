@@ -9,6 +9,7 @@ import { CONNECT_STRIPE } from "../../lib/graphql/mutations/ConnectStripe";
 import { Redirect, RouteComponentProps } from "react-router-dom";
 import { Viewer } from "../../lib/types";
 import { displaySuccessNotification } from "../../lib/utils";
+import { useScrollToTop } from "../../lib/hooks/useScrollToTop";
 
 const { Content } = Layout;
 
@@ -37,6 +38,8 @@ export const Stripe = ({
     },
   });
   const connectStripeRef = useRef(connectStripe);
+
+  useScrollToTop();
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");

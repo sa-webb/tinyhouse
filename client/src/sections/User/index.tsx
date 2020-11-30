@@ -13,6 +13,7 @@ import { PageSkeleton } from "../../lib/components/PageSkeleton";
 import { ErrorBanner } from "../../lib/components/ErrorBanner";
 import { UserListings } from "./UserListings";
 import { UserBookings } from "./UserBookings";
+import { useScrollToTop } from "../../lib/hooks/useScrollToTop";
 
 interface Props {
   viewer: Viewer;
@@ -46,6 +47,8 @@ export const User = ({
       fetchPolicy: "cache-and-network"
     },
   );
+
+  useScrollToTop();
 
   const handleUserRefetch = async () => {
     await refetch();
