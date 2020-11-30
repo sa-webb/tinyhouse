@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { Booking, Database, Listing, User } from "../@types";
+import { Booking, Database, Listing, User } from "../lib/types";
 
 const url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_USER_PASSWORD}@${process.env.DB_CLUSTER}.mongodb.net/<dbname>?retryWrites=true&w=majority`;
 
